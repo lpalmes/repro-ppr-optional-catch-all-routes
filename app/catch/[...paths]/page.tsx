@@ -3,7 +3,7 @@
 export function generateStaticParams() {
   return [
     {
-      segments: ["pokemon", "ditto"],
+      paths: ["pokemon", "ditto"],
     },
   ];
 }
@@ -11,12 +11,12 @@ export function generateStaticParams() {
 
 export default async function TestCatchAllRoute({
   params
-}: PageProps<"/catch/[...segments]">) {
+}: PageProps<"/catch/[...paths]">) {
   "use cache"
 
-  const { segments = [] } = await params
+  const { paths = [] } = await params
 
-  const subpath = segments.join("/")
+  const subpath = paths.join("/")
 
   const json = await fetchApi(subpath)
   return (
