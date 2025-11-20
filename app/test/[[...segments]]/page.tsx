@@ -1,7 +1,23 @@
 
-export default async function Home() {
 
-  const pokemon = await fetchPokemon()
+export function generateStaticParams() {
+  return [
+    {
+      segments: ["pokemon", "ditto"],
+    },
+  ];
+}
+
+
+export default async function TestCatchAllRoute({
+  params
+}: PageProps<"/test/[[...segments]]">) {
+
+  const { segments = [] } = await params
+
+  const subpath = segments.join("/")
+
+  const json = await fetchApi(subpath)
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
@@ -10,17 +26,18 @@ export default async function Home() {
             This should be partially pre-rendered, instant
           </h1>
         </div>
-        <h1>{pokemon.name}</h1>
-        <h1>{pokemon.id}</h1>
+        <p>
+          {JSON.stringify(json, null, 2)}
+        </p>
       </main>
     </div>
   );
 }
 
 
-async function fetchPokemon() {
-  "use cache: remote"
+async function fetchApi(resource: string) {
+  "use cache"
 
-  const response = await fetch("https://pokeapi.co/api/v2/pokemon/ditto")
+  const response = await fetch("https://pokeapi.co/api/v2/" + resource)
   return response.json()
 }
