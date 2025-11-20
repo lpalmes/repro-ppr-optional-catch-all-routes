@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Suspense } from "react";
+import { connection } from "next/server";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,8 +29,23 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <nav className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white">
+          <h1 className="text-xl font-semibold">Header</h1>
+          <Suspense fallback={<span className="text-sm text-gray-500">Loading...</span>}>
+            <Account />
+          </Suspense>
+        </nav>
         {children}
       </body>
     </html>
   );
+}
+
+async function Account() {
+  await connection()
+
+  await new Promise((res) => setTimeout(res, 5000))
+  return (
+    <h1>welcome back, time {new Date().toISOString()}</h1>
+  )
 }
