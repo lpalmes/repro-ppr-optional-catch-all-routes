@@ -12,6 +12,7 @@ export function generateStaticParams() {
 export default async function TestCatchAllRoute({
   params
 }: PageProps<"/test/[[...segments]]">) {
+  "use cache"
 
   const { segments = [] } = await params
 
